@@ -1,0 +1,17 @@
+{
+  "name": "auto-post-telegram-api",
+  "version": "1.0.0",
+  "description": "A Telegram Bot picks messages from channel and Post to configured social channels ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon src/index.js"
+  },
+  "author": "Sonu Gupta",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.5",
+    "dotenv": "^16.3.2",
+    "telegraf": "^4.15.3"
+  }
+}
