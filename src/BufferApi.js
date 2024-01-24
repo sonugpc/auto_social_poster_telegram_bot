@@ -19,10 +19,10 @@ class BufferApi {
       formdata.append("shorten", "false");
       formdata.append("attachment", "false");
       formdata.append("profile_ids[]", "65af701b5486073034aba2a1");
-      formdata.append("media[photo]", media);
+      media && formdata.append("media[photo]", media);
       await this.CallBufferPostAPI(ACTION_URLS.PostUpdates, formdata);
     } catch (error) {
-      console.log(error.toString());
+      console.log(error);
     }
   }
 
