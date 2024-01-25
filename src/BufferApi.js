@@ -1,5 +1,6 @@
 const { default: axios } = require("axios");
 const Config = require("../config");
+const FormData = require("form-data");
 
 const ACTION_URLS = {
   PostUpdates: Config.BUFFER_API + "/updates/create.json",
