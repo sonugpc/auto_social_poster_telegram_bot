@@ -1,6 +1,9 @@
 const { Telegraf } = require("telegraf");
 const Config = require("../config");
-const handleChannelPostHandler = require("./ChannelPostUpdatesHandler");
+const {
+  handleDirectPostHandler,
+  handleChannelPostHandler,
+} = require("./ChannelPostUpdatesHandler");
 
 const bot = new Telegraf(Config.BOT_TOKEN);
 
@@ -10,6 +13,10 @@ bot.start((ctx) => {
 
 bot.on("channel_post", (ctx) => {
   handleChannelPostHandler(ctx);
+});
+
+bot.on(["message"], (ctx) => {
+  if (process.env.env == "dev") handleDirectPostHandler(ctx);
 });
 
 bot.launch();

@@ -14,11 +14,12 @@ class BufferApi {
     try {
       const formdata = new FormData();
       formdata.append("text", text);
-      formdata.append(" profile_ids[]", "65af71765486073034b53852");
+      profile_ids.forEach((element) => {
+        formdata.append("profile_ids[]", element);
+      });
       formdata.append("now", now);
       formdata.append("shorten", "false");
       formdata.append("attachment", "false");
-      formdata.append("profile_ids[]", "65af701b5486073034aba2a1");
       media && formdata.append("media[photo]", media);
       await this.CallBufferPostAPI(ACTION_URLS.PostUpdates, formdata);
     } catch (error) {
