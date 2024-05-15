@@ -47,4 +47,4 @@ This project is a Telegram bot that picks messages from a Telegram channel and p
 
 Run the bot with:
 ```bash
-node src/bot.js
+node src/index.js
