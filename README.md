@@ -2,21 +2,41 @@
 
 This is a Cloudflare Worker API that allows you to post updates to your social media profiles via Buffer.
 
-## Setup
+## Setup & Configuration
 
-1.  **Install dependencies:**
-    ```bash
-    npm install
-    ```
+### 1. Install Dependencies
+```bash
+npm install
+```
 
-2.  **Create a `.dev.vars` file:**
+### 2. Configure Environment Variables
 
-    Create a file named `.dev.vars` in the root of the project and add the following content, replacing the values with your actual credentials:
+How you set variables depends on whether you're running the worker locally or deploying it to Cloudflare.
 
-    ```
-    BUFFER_AUTH="your_buffer_auth_token"
-    OPEN_AI_KEY="your_openai_api_key"
-    ```
+#### For Local Development (`npm run dev`)
+
+Create a file named `.dev.vars` in the root of your project. Wrangler uses this file to load variables for your local server. **This file should not be committed to version control.**
+
+```
+# .dev.vars
+BUFFER_AUTH="your_buffer_auth_token"
+OPEN_AI_KEY="your_openai_api_key"
+```
+
+#### For Production Deployment (`npm run deploy`)
+
+For the deployed worker, you must set secrets using Wrangler. These are securely stored and encrypted by Cloudflare.
+
+Run the following commands in your terminal, pasting your secret value when prompted:
+
+```bash
+npx wrangler secret put BUFFER_AUTH
+```
+```bash
+npx wrangler secret put OPEN_AI_KEY
+```
+
+These secrets will be automatically available in your deployed worker's environment (`env`).
 
 ## Running Locally
 
@@ -64,6 +84,8 @@ curl -X POST http://localhost:8787 \
 ```
 
 ## Deployment
+
+Before deploying, ensure you have set your production secrets as described in the configuration section.
 
 To deploy the worker to Cloudflare, run:
 
