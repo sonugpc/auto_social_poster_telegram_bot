@@ -1,3 +1,3 @@
-name = "auto-social-poster-api"
+name = "bigtricks-auto-poster"
 main = "src/index.js"
 compatibility_date = "2023-07-24"
