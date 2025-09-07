@@ -1,26 +1,34 @@
-const { Telegraf } = require("telegraf");
-const Config = require("../config");
-const {
-  handleDirectPostHandler,
-  handleChannelPostHandler,
-} = require("./ChannelPostUpdatesHandler");
+import { BufferApi } from "./BufferApi";
+import CaptionModifier from "./CaptionModifier";
 
-const bot = new Telegraf(Config.BOT_TOKEN);
+export default {
+  async fetch(request, env, ctx) {
+    if (request.method !== "POST") {
+      return new Response("Expected POST", { status: 405 });
+    }
 
-bot.start((ctx) => {
-  ctx.reply("Hello");
-});
+    try {
+      const { caption, profile_ids, media, caption_modifier } = await request.json();
 
-bot.on("channel_post", (ctx) => {
-  handleChannelPostHandler(ctx);
-});
+      if (!caption || !profile_ids) {
+        return new Response("Missing caption or profile_ids", { status: 400 });
+      }
 
-bot.on(["message"], (ctx) => {
-  if (process.env.env == "dev") handleDirectPostHandler(ctx);
-});
+      const buffer = new BufferApi(env.BUFFER_AUTH);
+      let finalCaption = caption;
 
-bot.launch();
+      if (caption_modifier) {
+        finalCaption = await CaptionModifier.modifyCaption(caption, env.OPEN_AI_KEY);
+      }
 
-// Enable graceful stop
-process.once("SIGINT", () => bot.stop("SIGINT"));
-process.once("SIGTERM", () => bot.stop("SIGTERM"));
+      const bufferResponse = await buffer.postToBuffer(profile_ids, finalCaption, true, media);
+
+      return new Response(JSON.stringify(bufferResponse), {
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (error) {
+      console.error(error);
+      return new Response("An error occurred", { status: 500 });
+    }
+  },
+};

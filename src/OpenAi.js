@@ -1,4 +1,4 @@
-const { default: OpenAI } = require("openai");
+import OpenAI from "openai";
 
 class GptResponse {
   constructor(apiKey) {
@@ -19,4 +19,4 @@ class GptResponse {
   }
 }
 
-module.exports = GptResponse;
+export default GptResponse;

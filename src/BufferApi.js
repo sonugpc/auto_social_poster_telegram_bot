@@ -1,13 +1,10 @@
-const { default: axios } = require("axios");
-const Config = require("../config");
-
 const ACTION_URLS = {
-  PostUpdates: Config.BUFFER_API + "/updates/create.json",
+  PostUpdates: "https://api.bufferapp.com/1/updates/create.json",
 };
-class BufferApi {
+
+export class BufferApi {
   constructor(authToken) {
     this.authToken = authToken;
-    this.bufferUrl = Config.BUFFER_API;
   }
 
   async postToBuffer(profile_ids, text, now, media) {
@@ -21,17 +18,20 @@ class BufferApi {
       formdata.append("shorten", "false");
       formdata.append("attachment", "false");
       media && formdata.append("media[photo]", media);
-      await this.CallBufferPostAPI(ACTION_URLS.PostUpdates, formdata);
+
+      const response = await this.CallBufferPostAPI(ACTION_URLS.PostUpdates, formdata);
+      return await response.json();
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 
   CallBufferPostAPI(endPoint, payload) {
-    return axios.post(endPoint, payload, {
-      headers: { Authorization: `Bearer ${Config.BUFFER_AUTH}` },
+    return fetch(endPoint, {
+      method: "POST",
+      body: payload,
+      headers: { Authorization: `Bearer ${this.authToken}` },
     });
   }
 }
-
-module.exports = { BufferApi };

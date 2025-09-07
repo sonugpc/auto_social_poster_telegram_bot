@@ -1,50 +1,71 @@
-# Auto Social Poster Telegram Bot
+# Auto Social Poster API
 
-This project is a Telegram bot that picks messages from a Telegram channel and posts them to various social media platforms using the Buffer API. The bot needs to be added to the telegram channel with at least  read access of the messages. 
+This is a Cloudflare Worker API that allows you to post updates to your social media profiles via Buffer.
 
-## Features
+## Setup
 
-- **Automated Social Media Posting**:Instantly send a message to social media accounts as soon as it's posted on the Telegram channel.
-- **Buffer API Integration**: Uses Buffer to schedule and post content. A free buffer account will work. You need to put the API in env variables. 
-- **Customizable**: Configure which channels and social media accounts to post to.
-
-## Installation
-
-### Prerequisites
-
-- Node.js and npm installed
-- A Telegram bot token from BotFather
-- Buffer API credentials
-
-### Steps
-
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/sonugpc/auto_social_poster_telegram_bot.git
-    cd auto_social_poster_telegram_bot
-    ```
-
-2. Install dependencies:
+1.  **Install dependencies:**
     ```bash
     npm install
     ```
 
-3. Configure the bot:
-    - Edit `config.js` to include your Telegram bot token, Buffer API credentials, and other settings.
+2.  **Create a `.dev.vars` file:**
 
-    ```javascript
-    module.exports = {
-        telegramBotToken: 'YOUR_TELEGRAM_BOT_TOKEN',
-        buffer: {
-            accessToken: 'YOUR_BUFFER_ACCESS_TOKEN',
-            profileIds: ['YOUR_BUFFER_PROFILE_ID']
-        },
-        telegramChannel: '@your_channel_name'
-    };
+    Create a file named `.dev.vars` in the root of the project and add the following content, replacing the values with your actual credentials:
+
+    ```
+    BUFFER_AUTH="your_buffer_auth_token"
+    OPEN_AI_KEY="your_openai_api_key"
     ```
 
-## Usage
+## Running Locally
 
-Run the bot with:
+To start the local development server, run:
+
 ```bash
-node src/index.js
+npm run dev
+```
+
+This will start a local server, typically on `http://localhost:8787`.
+
+## Testing
+
+You can test the API by sending a POST request to the local server.
+
+**Example using `curl`:**
+
+A basic example:
+```bash
+curl -X POST http://localhost:8787 -H "Content-Type: application/json" -d '{"caption": "My first post!", "profile_ids": ["your_profile_id"]}'
+```
+
+With caption modifier:
+```bash
+curl -X POST http://localhost:8787 \
+-H "Content-Type: application/json" \
+-d '{
+  "caption": "This is a test post from my new API!",
+  "profile_ids": ["your_profile_id_1", "your_profile_id_2"],
+  "caption_modifier": true
+}'
+```
+
+**With a media URL:**
+
+```bash
+curl -X POST http://localhost:8787 \
+-H "Content-Type: application/json" \
+-d '{
+  "caption": "This is a test post with an image!",
+  "profile_ids": ["your_profile_id_1"],
+  "media": "https://example.com/your-image.jpg",
+  "caption_modifier": false
+}'
+```
+
+## Deployment
+
+To deploy the worker to Cloudflare, run:
+
+```bash
+npm run deploy
