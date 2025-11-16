@@ -38,6 +38,8 @@ npx wrangler secret put OPEN_AI_KEY
 
 These secrets will be automatically available in your deployed worker's environment (`env`).
 
+**Important Note on Security:** Cloudflare does not use your local `.dev.vars` file when you deploy. This is a crucial security feature. Your deployment (`wrangler deploy`) bundles only your application code (`src/*.js`, `package.json`, etc.), not your local secret files. This prevents you from accidentally leaking sensitive keys into your codebase or version control (like Git). The `wrangler secret put` command is the secure and correct way to provide these variables to your live application.
+
 ## Running Locally
 
 To start the local development server, run:
@@ -80,6 +82,21 @@ curl -X POST http://localhost:8787 \
   "profile_ids": ["your_profile_id_1"],
   "media": "https://example.com/your-image.jpg",
   "caption_modifier": false
+}'
+```
+
+**Posting an Instagram Reel:**
+
+To post a video as an Instagram Reel, include a video `media` URL and set `is_reel` to `true`.
+
+```bash
+curl -X POST http://localhost:8787 \
+-H "Content-Type: application/json" \
+-d '{
+  "caption": "Check out my new Reel!",
+  "profile_ids": ["your_instagram_profile_id"],
+  "media": "https://example.com/your-video.mp4",
+  "is_reel": true
 }'
 ```
 

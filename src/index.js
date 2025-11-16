@@ -8,7 +8,7 @@ export default {
     }
 
     try {
-      const { caption, profile_ids, media, caption_modifier } = await request.json();
+      const { caption, profile_ids, media, caption_modifier, is_reel } = await request.json();
 
       if (!caption || !profile_ids) {
         return new Response("Missing caption or profile_ids", { status: 400 });
@@ -21,7 +21,7 @@ export default {
         finalCaption = await CaptionModifier.modifyCaption(caption, env.OPEN_AI_KEY);
       }
 
-      const bufferResponse = await buffer.postToBuffer(profile_ids, finalCaption, true, media);
+      const bufferResponse = await buffer.postToBuffer(profile_ids, finalCaption, true, media, is_reel);
 
       return new Response(JSON.stringify(bufferResponse), {
         headers: { "Content-Type": "application/json" },

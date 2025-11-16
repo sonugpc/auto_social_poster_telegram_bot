@@ -7,7 +7,7 @@ export class BufferApi {
     this.authToken = authToken;
   }
 
-  async postToBuffer(profile_ids, text, now, media) {
+  async postToBuffer(profile_ids, text, now, media, is_reel = false) {
     try {
       const formdata = new FormData();
       formdata.append("text", text);
@@ -16,8 +16,15 @@ export class BufferApi {
       });
       formdata.append("now", now);
       formdata.append("shorten", "false");
-      formdata.append("attachment", "false");
-      media && formdata.append("media[photo]", media);
+      
+      if (media) {
+        // For videos or images
+        formdata.append("media[photo]", media); // Assuming video for reels
+      }
+
+      if (is_reel) {
+        formdata.append("media[instagram_options][reel]", "true");
+      }
 
       const response = await this.CallBufferPostAPI(ACTION_URLS.PostUpdates, formdata);
       return await response.json();
