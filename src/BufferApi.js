@@ -19,7 +19,7 @@ export class BufferApi {
       
       if (media) {
         // For videos or images
-        formdata.append("media[photo]", media); // Assuming video for reels
+        formdata.append("media[photo]", "https://images.weserv.nl/?url="+media); // Assuming video for reels
       }
 
       if (is_reel) {
