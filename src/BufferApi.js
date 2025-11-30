@@ -19,15 +19,22 @@ export class BufferApi {
       
       if (media) {
         // For videos or images
-        formdata.append("media[photo]", "https://images.weserv.nl/?url="+media); // Assuming video for reels
-      }
+        const url = "https://www.bigtricks.in/BotAPI/assetsLoader/proxy.php?url=" + btoa(media); 
+        console.log("MEDIA URL:", url);
+        
+        formdata.append("media[photo]", url); // Assuming video for reels
+      
 
       if (is_reel) {
         formdata.append("media[instagram_options][reel]", "true");
       }
 
       const response = await this.CallBufferPostAPI(ACTION_URLS.PostUpdates, formdata);
-      return await response.json();
+      const result =  await response.json();
+    
+      console.log("Buffer Response:", result);
+      return result;
+    }
     } catch (error) {
       console.log(error);
       throw error;
